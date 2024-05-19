@@ -41,7 +41,6 @@ const Sidebar = ({onEntityClick}) => {
         {tables.map((table, index) => (
           <div key={index} className="entity-list-box" onClick={() => onEntityClick(table)}>
             <h3 >{table.charAt(0).toUpperCase()+table.substring(1)}</h3>
-            {/* Render the content of the table here */}
           </div>
         ))}
       </div>
