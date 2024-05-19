@@ -32,7 +32,7 @@ app.get('/tables', (req, res) => {
   app.get("/tables/table", (req, res) => {
     const { name: tableName } = req.query;
     const database = "vahan";
-    const query = `DESCRIBE ${database}.${tableName}`; // Use DESCRIBE statement to get table details
+    const query = `DESCRIBE ${database}.${tableName}`; 
     db.query(query, (err, result) => {
       if (err) {
         console.error('Error fetching table details:', err);
@@ -45,7 +45,7 @@ app.get('/tables', (req, res) => {
   app.get("/tables/table/info", (req,res) => {
     const { name: tableName } = req.query;
     const database = "vahan";
-    const query = `SELECT * from ${database}.${tableName}`; // Use SELECT * statement to get table data
+    const query = `SELECT * from ${database}.${tableName}`; 
     db.query(query, (err, result) => {
       if (err) {
         console.error('Error fetching table details:', err);
@@ -56,7 +56,7 @@ app.get('/tables', (req, res) => {
         if (row.Dob) {
             return {
                 ...row,
-                Dob: row.Dob.toISOString().split('T')[0] // Format date to YYYY-MM-DD
+                Dob: row.Dob.toISOString().split('T')[0] 
             };
         }
         return row;
@@ -92,7 +92,6 @@ app.get('/tables', (req, res) => {
     const { tableName, columns } = req.body;
 
     let primary_key = null;
-    // Create the SQL query to create the table
     let query = `CREATE TABLE ${tableName} (`;
     columns.forEach((column, index) => {
         query += `${column.name} ${column.type}, `;
@@ -105,7 +104,6 @@ app.get('/tables', (req, res) => {
     query += `${primary_key}`;
     query += '))';
 
-    // Execute the SQL query
     db.query(query, (err, result) => {
         if (err) {
             console.error('Error creating table:', err);
@@ -154,19 +152,17 @@ app.get('/tables', (req, res) => {
   app.post("/update-table", (req, res) => {
     const { tableName, columns, primaryKey, prim_value } = req.body;
 
-    // Filter out columns with empty values
     const filteredColumns = columns.filter(column => column.value && column.name !== primaryKey);
 
     if (filteredColumns.length === 0) {
         return res.status(400).json({ error: "No valid columns to update" });
     }
 
-    // Construct the UPDATE query
     let query = `UPDATE ${tableName} SET `;
     query += filteredColumns.map(column => `${column.name} = '${column.value}'`).join(", ");
     query += ` WHERE ${primaryKey} = '${prim_value}'`;
 
-    console.log('Executing query:', query); // Log the query for debugging
+    console.log('Executing query:', query);
 
     db.query(query, (err, result) => {
         if (err) {
